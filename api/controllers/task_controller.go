@@ -20,6 +20,7 @@ func (con TaskController) Configure(r *gin.Engine) {
 	{
 		g.GET("", con.all)
 		g.POST("", con.create)
+		g.DELETE(":id", con.delete)
 		g.GET(":id", con.byId)
 		g.PATCH(":id", con.toggleCompleted)
 	}
@@ -70,10 +71,22 @@ func (con TaskController) toggleCompleted(c *gin.Context) {
 
 	result, err := con.taskService.ToggleCompleted(id)
 	if err != nil {
-		c.String(http.StatusNotFound, "failed to fetch task: %s", err)
+		c.String(http.StatusNotFound, "failed to patch task: %s", err)
 		return
 	}
 
 	c.IndentedJSON(http.StatusOK, result)
 
+}
+
+func (con TaskController) delete(c *gin.Context) {
+	id := c.Param("id")
+
+	err := con.taskService.Delete(id)
+	if err != nil {
+		c.String(http.StatusNotFound, "failed to delete task: %s", err)
+		return
+	}
+
+	c.Status(http.StatusOK)
 }

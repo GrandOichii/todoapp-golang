@@ -7,4 +7,5 @@ type TaskRepository interface {
 	Save(*models.Task) error
 	FindById(id string) *models.Task
 	UpdateById(id string, updateF func(*models.Task) *models.Task) *models.Task
+	Remove(id string) bool
 }

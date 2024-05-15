@@ -65,3 +65,11 @@ func (ser TaskServiceImpl) ToggleCompleted(id string) (*dto.GetTask, error) {
 	}
 	return dto.CreateGetTask(result), nil
 }
+
+func (ser TaskServiceImpl) Delete(id string) error {
+	deleted := ser.repo.Remove(id)
+	if !deleted {
+		return fmt.Errorf("no task with id %s", id)
+	}
+	return nil
+}

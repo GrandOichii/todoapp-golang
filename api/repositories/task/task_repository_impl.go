@@ -39,3 +39,15 @@ func (repo TaskRepositoryImpl) UpdateById(id string, updateF func(*models.Task) 
 	}
 	return updateF(task)
 }
+
+func (repo *TaskRepositoryImpl) Remove(id string) bool {
+	for i, task := range repo.tasks {
+		if task.Id != id {
+			continue
+		}
+		repo.tasks = append(repo.tasks[:i], repo.tasks[i+1:]...)
+		return true
+	}
+	return false
+
+}
