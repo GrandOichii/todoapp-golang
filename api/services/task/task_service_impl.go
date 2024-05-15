@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/task"
@@ -40,8 +41,10 @@ func (ser TaskServiceImpl) Add(task *dto.CreateTask) (*dto.GetTask, error) {
 
 	newTask := task.ToTask()
 
-	if err := ser.repo.Save(newTask); err != nil {
-		return nil, err
+	// shouldn't ever happen
+	saved := ser.repo.Save(newTask)
+	if !saved {
+		return nil, errors.New("failed to save task")
 	}
 
 	return dto.CreateGetTask(newTask), nil
