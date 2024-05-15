@@ -21,6 +21,7 @@ func (con TaskController) Configure(r *gin.Engine) {
 		g.GET("", con.all)
 		g.POST("", con.create)
 		g.GET(":id", con.byId)
+		g.PATCH(":id", con.toggleCompleted)
 	}
 }
 
@@ -62,4 +63,17 @@ func (con TaskController) byId(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, result)
+}
+
+func (con TaskController) toggleCompleted(c *gin.Context) {
+	id := c.Param("id")
+
+	result, err := con.taskService.ToggleCompleted(id)
+	if err != nil {
+		c.String(http.StatusNotFound, "failed to fetch task: %s", err)
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, result)
+
 }

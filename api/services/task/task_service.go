@@ -6,4 +6,5 @@ type TaskService interface {
 	GetAll() []*dto.GetTask
 	Add(*dto.CreateTask) (*dto.GetTask, error)
 	GetById(id string) (*dto.GetTask, error)
+	ToggleCompleted(id string) (*dto.GetTask, error)
 }

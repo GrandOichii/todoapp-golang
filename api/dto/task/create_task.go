@@ -9,7 +9,9 @@ type CreateTask struct {
 
 func (t CreateTask) ToTask() *models.Task {
 	return &models.Task{
-		Title: t.Title,
-		Text:  t.Text,
+		Id:        "",
+		Title:     t.Title,
+		Text:      t.Text,
+		Completed: false,
 	}
 }

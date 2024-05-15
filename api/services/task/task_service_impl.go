@@ -54,3 +54,14 @@ func (ser TaskServiceImpl) GetById(id string) (*dto.GetTask, error) {
 	}
 	return dto.CreateGetTask(result), nil
 }
+
+func (ser TaskServiceImpl) ToggleCompleted(id string) (*dto.GetTask, error) {
+	result := ser.repo.UpdateById(id, func(task *models.Task) *models.Task {
+		task.Completed = !task.Completed
+		return task
+	})
+	if result == nil {
+		return nil, fmt.Errorf("no task with id %s", id)
+	}
+	return dto.CreateGetTask(result), nil
+}

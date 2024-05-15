@@ -31,3 +31,11 @@ func (repo TaskRepositoryImpl) FindById(id string) *models.Task {
 	}
 	return nil
 }
+
+func (repo TaskRepositoryImpl) UpdateById(id string, updateF func(*models.Task) *models.Task) *models.Task {
+	task := repo.FindById(id)
+	if task == nil {
+		return nil
+	}
+	return updateF(task)
+}
