@@ -42,7 +42,7 @@ func (con AuthController) register(c *gin.Context) {
 	var newUser dto.PostUser
 
 	if err := c.BindJSON(&newUser); err != nil {
-		c.Status(http.StatusBadRequest)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
