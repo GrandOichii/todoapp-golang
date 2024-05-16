@@ -11,6 +11,21 @@ definitions:
       title:
         type: string
     type: object
+  dto.PostUser:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  services.LoginResult:
+    properties:
+      token:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -18,8 +33,42 @@ info:
   title: TODOapp api
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      description: Checks the user data and returns a jwt token on correct login
+      parameters:
+      - description: login details
+        in: body
+        name: details
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PostUser'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.LoginResult'
+      summary: Logs in the user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      description: Checks the user data and adds it to the repo
+      parameters:
+      - description: register details
+        in: body
+        name: details
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PostUser'
+      responses:
+        "200":
+          description: OK
+      summary: Registers the user
+      tags:
+      - Auth
   /task:
-    get:
+    post:
       description: Fetches all of the user's tasks
       responses:
         "200":
@@ -30,5 +79,5 @@ paths:
             type: array
       summary: Fetch all tasks
       tags:
-      - tags
+      - Tasks
 swagger: "2.0"

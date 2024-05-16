@@ -5,8 +5,10 @@ import (
 
 	"github.com/GrandOichii/todoapp-golang/api/config"
 	"github.com/GrandOichii/todoapp-golang/api/controllers"
-	repositories "github.com/GrandOichii/todoapp-golang/api/repositories/task"
-	services "github.com/GrandOichii/todoapp-golang/api/services/task"
+	taskrepositories "github.com/GrandOichii/todoapp-golang/api/repositories/task"
+	userrepositories "github.com/GrandOichii/todoapp-golang/api/repositories/user"
+	taskservices "github.com/GrandOichii/todoapp-golang/api/services/task"
+	userservices "github.com/GrandOichii/todoapp-golang/api/services/user"
 	gin "github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -54,13 +56,22 @@ func main() {
 	router := createRouter()
 
 	taskController := controllers.CreateTaskController(
-		services.CreateTaskServiceImpl(
-			repositories.CreateTaskRepositoryImpl(dbClient, config),
+		taskservices.CreateTaskServiceImpl(
+			taskrepositories.CreateTaskRepositoryImpl(dbClient, config),
 			validate,
 		),
 	)
-
 	taskController.Configure(router)
+
+	authController := controllers.CreateAuthController(
+		userservices.CreateUserServiceImpl(
+			userrepositories.CreateUserRepositoryImpl(
+				dbClient, config,
+			),
+			validate,
+		),
+	)
+	authController.Configure(router)
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

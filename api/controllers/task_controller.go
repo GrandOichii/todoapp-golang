@@ -15,7 +15,6 @@ type TaskController struct {
 }
 
 func (con TaskController) Configure(r *gin.Engine) {
-	// TODO
 	g := r.Group("/api/v1/task")
 	{
 		g.GET("", con.all)
@@ -35,9 +34,9 @@ func CreateTaskController(taskService services.TaskService) *TaskController {
 // Find all tasks	godoc
 // @Summary			Fetch all tasks
 // @Description		Fetches all of the user's tasks
-// @Tags			tags
+// @Tags			Tasks
 // @Success			200 {object} []dto.GetTask
-// @Router			/task [get]
+// @Router			/task [post]
 func (con TaskController) all(c *gin.Context) {
 	result := con.taskService.GetAll()
 	c.IndentedJSON(http.StatusOK, result)

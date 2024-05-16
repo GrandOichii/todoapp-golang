@@ -15,11 +15,64 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Checks the user data and returns a jwt token on correct login",
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logs in the user",
+                "parameters": [
+                    {
+                        "description": "login details",
+                        "name": "details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PostUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.LoginResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Checks the user data and adds it to the repo",
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registers the user",
+                "parameters": [
+                    {
+                        "description": "register details",
+                        "name": "details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PostUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/task": {
-            "get": {
+            "post": {
                 "description": "Fetches all of the user's tasks",
                 "tags": [
-                    "tags"
+                    "Tasks"
                 ],
                 "summary": "Fetch all tasks",
                 "responses": {
@@ -50,6 +103,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.PostUser": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.LoginResult": {
+            "type": "object",
+            "properties": {
+                "token": {
                     "type": "string"
                 }
             }
