@@ -26,19 +26,19 @@ func (con AuthController) Configure(r *gin.Engine) {
 	// TODO
 	g := r.Group("/api/v1/auth")
 	{
-		g.POST("/register", con.register)
-		g.POST("/login", con.login)
+		g.POST("/register", con.Register)
+		g.POST("/login", con.Login)
 	}
 }
 
 // UserRegister			godoc
 // @Summary				Registers the user
 // @Description			Checks the user data and adds it to the repo
-// @Param				details body dto.PostUser true "register details"
+// @Param				details body dto.PostUser true "Register details"
 // @Tags				Auth
 // @Success				200
-// @Router				/auth/register [post]
-func (con AuthController) register(c *gin.Context) {
+// @Router				/auth/Register [post]
+func (con AuthController) Register(c *gin.Context) {
 	var newUser dto.PostUser
 
 	if err := c.BindJSON(&newUser); err != nil {
@@ -57,11 +57,11 @@ func (con AuthController) register(c *gin.Context) {
 
 // UserLogin			godoc
 // @Summary				Logs in the user
-// @Description			Checks the user data and returns a jwt token on correct login
-// @Param				details body dto.PostUser true "login details"
+// @Description			Checks the user data and returns a jwt token on correct Login
+// @Param				details body dto.PostUser true "Login details"
 // @Tags				Auth
 // @Success				200 {object} services.LoginResult
-// @Router				/auth/login [post]
-func (con AuthController) login(c *gin.Context) {
+// @Router				/auth/Login [post]
+func (con AuthController) Login(c *gin.Context) {
 	con.loginHandler(c)
 }
