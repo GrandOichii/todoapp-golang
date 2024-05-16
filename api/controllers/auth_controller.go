@@ -48,7 +48,7 @@ func (con AuthController) register(c *gin.Context) {
 
 	err := con.userService.Register(&newUser)
 	if err != nil {
-		c.String(http.StatusBadRequest, "failed to register: %s", err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 

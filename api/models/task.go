@@ -5,4 +5,5 @@ type Task struct {
 	Title     string `json:"title"`
 	Text      string `json:"text"`
 	Completed bool   `json:"completed"`
+	OwnerId   string `json:"ownerId"`
 }

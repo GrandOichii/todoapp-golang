@@ -25,24 +25,25 @@ func CreateTaskServiceImpl(repo repositories.TaskRepository, validate *validator
 	}
 }
 
-func (ser TaskServiceImpl) GetAll() []*dto.GetTask {
+func (ser TaskServiceImpl) GetAll(userId string) []*dto.GetTask {
 	return utility.MapSlice(
-		ser.repo.FindAll(),
+		ser.repo.FindByOwnerId(userId),
 		func(task *models.Task) *dto.GetTask {
 			return dto.CreateGetTask(task)
 		},
 	)
 }
 
-func (ser TaskServiceImpl) Add(task *dto.CreateTask) (*dto.GetTask, error) {
+func (ser TaskServiceImpl) Add(userId string, task *dto.CreateTask) (*dto.GetTask, error) {
 	if err := ser.validate.Struct(task); err != nil {
 		return nil, err
 	}
 
 	newTask := task.ToTask()
+	newTask.OwnerId = userId
 
-	// shouldn't ever happen
 	saved := ser.repo.Save(newTask)
+	// shouldn't ever happen
 	if !saved {
 		return nil, errors.New("failed to save task")
 	}
@@ -50,29 +51,35 @@ func (ser TaskServiceImpl) Add(task *dto.CreateTask) (*dto.GetTask, error) {
 	return dto.CreateGetTask(newTask), nil
 }
 
-func (ser TaskServiceImpl) GetById(id string) (*dto.GetTask, error) {
+func (ser TaskServiceImpl) GetById(userId, id string) (*dto.GetTask, error) {
 	result := ser.repo.FindById(id)
-	if result == nil {
+	if result == nil || result.OwnerId != userId {
 		return nil, fmt.Errorf("no task with id %s", id)
 	}
 	return dto.CreateGetTask(result), nil
 }
 
-func (ser TaskServiceImpl) ToggleCompleted(id string) (*dto.GetTask, error) {
+func (ser TaskServiceImpl) ToggleCompleted(userId, id string) (*dto.GetTask, error) {
 	result := ser.repo.UpdateById(id, func(task *models.Task) *models.Task {
 		task.Completed = !task.Completed
 		return task
 	})
-	if result == nil {
+	if result == nil || result.OwnerId != userId {
 		return nil, fmt.Errorf("no task with id %s", id)
 	}
 	return dto.CreateGetTask(result), nil
 }
 
-func (ser TaskServiceImpl) Delete(id string) error {
+func (ser TaskServiceImpl) Delete(userId, id string) error {
+	_, err := ser.GetById(userId, id)
+	if err != nil {
+		return err
+	}
+
 	deleted := ser.repo.Remove(id)
 	if !deleted {
-		return fmt.Errorf("no task with id %s", id)
+		panic(fmt.Errorf("failed to delete task with id %s", id))
 	}
+
 	return nil
 }

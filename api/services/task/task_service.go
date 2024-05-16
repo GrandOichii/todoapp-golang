@@ -3,9 +3,9 @@ package services
 import dto "github.com/GrandOichii/todoapp-golang/api/dto/task"
 
 type TaskService interface {
-	GetAll() []*dto.GetTask
-	Add(*dto.CreateTask) (*dto.GetTask, error)
-	GetById(id string) (*dto.GetTask, error)
-	ToggleCompleted(id string) (*dto.GetTask, error)
-	Delete(id string) error
+	GetAll(string) []*dto.GetTask
+	Add(string, *dto.CreateTask) (*dto.GetTask, error)
+	GetById(userId, id string) (*dto.GetTask, error)
+	ToggleCompleted(userId, id string) (*dto.GetTask, error)
+	Delete(userId, id string) error
 }

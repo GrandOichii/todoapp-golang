@@ -4,7 +4,9 @@ import (
 	"net/http"
 
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/task"
+	"github.com/GrandOichii/todoapp-golang/api/middleware"
 	services "github.com/GrandOichii/todoapp-golang/api/services/task"
+	"github.com/GrandOichii/todoapp-golang/api/utility"
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,7 +44,13 @@ func CreateTaskController(taskService services.TaskService, auth gin.HandlerFunc
 // @Success			200 {object} []dto.GetTask
 // @Router			/task [get]
 func (con TaskController) all(c *gin.Context) {
-	result := con.taskService.GetAll()
+	userId, err := utility.Extract(middleware.IDKey, c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
+	result := con.taskService.GetAll(userId)
 	c.IndentedJSON(http.StatusOK, result)
 }
 
@@ -55,6 +63,12 @@ func (con TaskController) all(c *gin.Context) {
 // @Success			201 {object} dto.GetTask
 // @Router			/task [post]
 func (con TaskController) create(c *gin.Context) {
+	userId, err := utility.Extract(middleware.IDKey, c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
 	var newTask dto.CreateTask
 
 	if err := c.BindJSON(&newTask); err != nil {
@@ -62,9 +76,9 @@ func (con TaskController) create(c *gin.Context) {
 		return
 	}
 
-	result, err := con.taskService.Add(&newTask)
+	result, err := con.taskService.Add(userId, &newTask)
 	if err != nil {
-		c.String(http.StatusBadRequest, "failed to create task: %s", err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -80,11 +94,17 @@ func (con TaskController) create(c *gin.Context) {
 // @Success			200 {object} dto.GetTask
 // @Router			/task/{taskId} [get]
 func (con TaskController) byId(c *gin.Context) {
+	userId, err := utility.Extract(middleware.IDKey, c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
 	id := c.Param("id")
 
-	result, err := con.taskService.GetById(id)
+	result, err := con.taskService.GetById(userId, id)
 	if err != nil {
-		c.String(http.StatusNotFound, "failed to fetch task: %s", err)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 
@@ -100,11 +120,17 @@ func (con TaskController) byId(c *gin.Context) {
 // @Success			200 {object} dto.GetTask
 // @Router			/task/{taskId} [patch]
 func (con TaskController) toggleCompleted(c *gin.Context) {
+	userId, err := utility.Extract(middleware.IDKey, c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
 	id := c.Param("id")
 
-	result, err := con.taskService.ToggleCompleted(id)
+	result, err := con.taskService.ToggleCompleted(userId, id)
 	if err != nil {
-		c.String(http.StatusNotFound, "failed to patch task: %s", err)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 
@@ -120,11 +146,17 @@ func (con TaskController) toggleCompleted(c *gin.Context) {
 // @Success			200
 // @Router			/task/{taskId} [delete]
 func (con TaskController) delete(c *gin.Context) {
+	userId, err := utility.Extract(middleware.IDKey, c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
 	id := c.Param("id")
 
-	err := con.taskService.Delete(id)
+	err = con.taskService.Delete(userId, id)
 	if err != nil {
-		c.String(http.StatusNotFound, "failed to delete task: %s", err)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 

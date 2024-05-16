@@ -42,6 +42,22 @@ func (repo TaskRepositoryImpl) FindAll() []*models.Task {
 	return result
 }
 
+func (repo TaskRepositoryImpl) FindByOwnerId(ownerId string) []*models.Task {
+	var collection = repo.collection()
+	cursor, err := collection.Find(context.TODO(), bson.D{
+		{Key: "ownerid", Value: ownerId},
+	})
+	if err != nil {
+		panic(err)
+	}
+	var result []*models.Task
+	err = cursor.All(context.TODO(), &result)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
 func (repo *TaskRepositoryImpl) Save(task *models.Task) bool {
 	collection := repo.collection()
 	insert, err := collection.InsertOne(context.TODO(), task)
