@@ -6,6 +6,7 @@ import (
 
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/user"
 	repositories "github.com/GrandOichii/todoapp-golang/api/repositories/user"
+	"github.com/GrandOichii/todoapp-golang/api/security"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -33,7 +34,11 @@ func (ser UserServiceImpl) Register(user *dto.PostUser) error {
 		return fmt.Errorf("user with username %s already exists", user.Username)
 	}
 
-	newUser := user.ToUser()
+	newUser, err := user.ToUser()
+	if err != nil {
+		return err
+	}
+
 	ser.repo.Save(newUser)
 
 	return nil
@@ -49,8 +54,7 @@ func (ser UserServiceImpl) Login(user *dto.PostUser) (*LoginResult, error) {
 		return nil, errors.New("incorrect username or password")
 	}
 
-	// TODO check hash
-	if existing.PasswordHash != user.Password {
+	if !security.CheckPasswordHash(user.Password, existing.PasswordHash) {
 		return nil, errors.New("incorrect username or password")
 	}
 

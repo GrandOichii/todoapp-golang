@@ -14,6 +14,7 @@ definitions:
   dto.PostUser:
     properties:
       password:
+        minLength: 8
         type: string
       username:
         type: string
