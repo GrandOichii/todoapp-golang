@@ -28,20 +28,6 @@ func (repo TaskRepositoryImpl) collection() *mongo.Collection {
 	return repo.dbClient.Database(repo.config.Db.DbName).Collection(repo.config.Db.TaskCollection.Name)
 }
 
-func (repo TaskRepositoryImpl) FindAll() []*models.Task {
-	var collection = repo.collection()
-	cursor, err := collection.Find(context.TODO(), bson.D{})
-	if err != nil {
-		panic(err)
-	}
-	var result []*models.Task
-	err = cursor.All(context.TODO(), &result)
-	if err != nil {
-		panic(err)
-	}
-	return result
-}
-
 func (repo TaskRepositoryImpl) FindByOwnerId(ownerId string) []*models.Task {
 	var collection = repo.collection()
 	cursor, err := collection.Find(context.TODO(), bson.D{

@@ -5,44 +5,12 @@ import (
 
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/user"
 	"github.com/GrandOichii/todoapp-golang/api/models"
-	repositories "github.com/GrandOichii/todoapp-golang/api/repositories/user"
 	"github.com/GrandOichii/todoapp-golang/api/security"
 	services "github.com/GrandOichii/todoapp-golang/api/services/user"
 	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
-
-type MockUserRepository struct {
-	repositories.UserRepository
-	mock.Mock
-}
-
-func (m *MockUserRepository) FindByUsername(username string) *models.User {
-	args := m.Called(username)
-	switch user := args.Get(0).(type) {
-	case *models.User:
-		return user
-	case nil:
-		return nil
-	}
-	return nil
-}
-
-func (m *MockUserRepository) Save(user *models.User) *models.User {
-	args := m.Called(user)
-	switch user := args.Get(0).(type) {
-	case *models.User:
-		return user
-	case nil:
-		return nil
-	}
-	return nil
-}
-
-func createUserRepository() *MockUserRepository {
-	return new(MockUserRepository)
-}
 
 func createUserService(repo *MockUserRepository) services.UserService {
 	validate := validator.New(validator.WithRequiredStructEnabled())
@@ -54,6 +22,7 @@ func createUserService(repo *MockUserRepository) services.UserService {
 }
 
 func Test_ShouldRegister(t *testing.T) {
+	// arrange
 	repo := createUserRepository()
 	service := createUserService(repo)
 	data := dto.PostUser{
@@ -64,11 +33,15 @@ func Test_ShouldRegister(t *testing.T) {
 	repo.On("Save", mock.Anything).Return(&models.User{})
 	repo.On("FindByUsername", data.Username).Return(nil)
 
+	// act
 	err := service.Register(&data)
+
+	// assert
 	assert.Nil(t, err)
 }
 
 func Test_ShouldNotRegisterUsernameTaken(t *testing.T) {
+	// arrange
 	repo := createUserRepository()
 	service := createUserService(repo)
 	data := dto.PostUser{
@@ -76,14 +49,17 @@ func Test_ShouldNotRegisterUsernameTaken(t *testing.T) {
 		Password: "password",
 	}
 
-	// repo.On("Save", mock.Anything).Return(&models.User{})
 	repo.On("FindByUsername", data.Username).Return(&models.User{})
 
+	// act
 	err := service.Register(&data)
+
+	// assert
 	assert.NotNil(t, err)
 }
 
 func Test_ShouldNotLogin(t *testing.T) {
+	// arrange
 	repo := createUserRepository()
 	service := createUserService(repo)
 	data := dto.PostUser{
@@ -91,15 +67,18 @@ func Test_ShouldNotLogin(t *testing.T) {
 		Password: "password",
 	}
 
-	// repo.On("Save", mock.Anything).Return(&models.User{})
 	repo.On("FindByUsername", data.Username).Return(nil)
 
+	// act
 	login, err := service.Login(&data)
+
+	// assert
 	assert.Nil(t, login)
 	assert.NotNil(t, err)
 }
 
 func Test_ShouldNotLoginIncorrectPassword(t *testing.T) {
+	// arrange
 	repo := createUserRepository()
 	service := createUserService(repo)
 	data := dto.PostUser{
@@ -113,12 +92,16 @@ func Test_ShouldNotLoginIncorrectPassword(t *testing.T) {
 
 	repo.On("FindByUsername", data.Username).Return(&existing)
 
+	// act
 	login, err := service.Login(&data)
+
+	// assert
 	assert.Nil(t, login)
 	assert.NotNil(t, err)
 }
 
 func Test_ShouldLogin(t *testing.T) {
+	// arrange
 	repo := createUserRepository()
 	service := createUserService(repo)
 	data := dto.PostUser{
@@ -133,7 +116,10 @@ func Test_ShouldLogin(t *testing.T) {
 
 	repo.On("FindByUsername", data.Username).Return(&existing)
 
+	// act
 	login, err := service.Login(&data)
+
+	// assert
 	assert.NotNil(t, login)
 	assert.Nil(t, err)
 }
