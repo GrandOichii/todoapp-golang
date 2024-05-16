@@ -7,6 +7,6 @@ type LoginResult struct {
 }
 
 type UserService interface {
-	Login(*dto.PostUser) (*LoginResult, error)
+	Login(*dto.PostUser) (*dto.GetUser, error)
 	Register(*dto.PostUser) error
 }

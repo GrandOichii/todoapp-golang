@@ -11,12 +11,14 @@ import (
 type AuthController struct {
 	Controller
 
-	userService services.UserService
+	userService  services.UserService
+	loginHandler func(c *gin.Context)
 }
 
-func CreateAuthController(userService services.UserService) *AuthController {
+func CreateAuthController(userService services.UserService, loginHandler func(c *gin.Context)) *AuthController {
 	return &AuthController{
-		userService: userService,
+		userService:  userService,
+		loginHandler: loginHandler,
 	}
 }
 
@@ -61,18 +63,5 @@ func (con AuthController) register(c *gin.Context) {
 // @Success				200 {object} services.LoginResult
 // @Router				/auth/login [post]
 func (con AuthController) login(c *gin.Context) {
-	var userData dto.PostUser
-
-	if err := c.BindJSON(&userData); err != nil {
-		c.Status(http.StatusBadRequest)
-		return
-	}
-
-	login, err := con.userService.Login(&userData)
-	if err != nil {
-		c.String(http.StatusBadRequest, "failed to login: %s", err)
-		return
-	}
-
-	c.IndentedJSON(http.StatusOK, login)
+	con.loginHandler(c)
 }

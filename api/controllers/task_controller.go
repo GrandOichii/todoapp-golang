@@ -12,11 +12,13 @@ type TaskController struct {
 	Controller
 
 	taskService services.TaskService
+	auth        gin.HandlerFunc
 }
 
 func (con TaskController) Configure(r *gin.Engine) {
 	g := r.Group("/api/v1/task")
 	{
+		g.Use(con.auth)
 		g.GET("", con.all)
 		g.POST("", con.create)
 		g.DELETE(":id", con.delete)
@@ -25,9 +27,10 @@ func (con TaskController) Configure(r *gin.Engine) {
 	}
 }
 
-func CreateTaskController(taskService services.TaskService) *TaskController {
+func CreateTaskController(taskService services.TaskService, auth gin.HandlerFunc) *TaskController {
 	return &TaskController{
 		taskService: taskService,
+		auth:        auth,
 	}
 }
 

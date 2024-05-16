@@ -12,7 +12,13 @@ require (
 )
 
 require (
+	github.com/gin-contrib/cors v1.7.2 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+)
+
+require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/appleboy/gin-jwt/v2 v2.9.2
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect

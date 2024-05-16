@@ -17,6 +17,7 @@ definitions:
         minLength: 8
         type: string
       username:
+        minLength: 4
         type: string
     required:
     - password

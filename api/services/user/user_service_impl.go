@@ -44,7 +44,7 @@ func (ser UserServiceImpl) Register(user *dto.PostUser) error {
 	return nil
 }
 
-func (ser UserServiceImpl) Login(user *dto.PostUser) (*LoginResult, error) {
+func (ser UserServiceImpl) Login(user *dto.PostUser) (*dto.GetUser, error) {
 	if err := ser.validate.Struct(user); err != nil {
 		return nil, err
 	}
@@ -58,10 +58,5 @@ func (ser UserServiceImpl) Login(user *dto.PostUser) (*LoginResult, error) {
 		return nil, errors.New("incorrect username or password")
 	}
 
-	// TODO generate token
-	token := "jwt token"
-
-	return &LoginResult{
-		Token: token,
-	}, nil
+	return dto.CreateGetUser(existing), nil
 }

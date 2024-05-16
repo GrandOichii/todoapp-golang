@@ -119,7 +119,8 @@ const docTemplate = `{
                     "minLength": 8
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 4
                 }
             }
         },
