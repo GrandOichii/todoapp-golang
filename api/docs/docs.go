@@ -69,12 +69,21 @@ const docTemplate = `{
             }
         },
         "/task": {
-            "post": {
+            "get": {
                 "description": "Fetches all of the user's tasks",
                 "tags": [
                     "Tasks"
                 ],
                 "summary": "Fetch all tasks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authenticator",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -86,10 +95,150 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Creates a new user task",
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Creates a task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authenticator",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "new task data",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetTask"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/{taskId}": {
+            "get": {
+                "description": "Finds a task by it's task id",
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Find a task by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authenticator",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetTask"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes the task",
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Delete task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authenticator",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Toggles the task's complete status",
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Toggle complete status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authenticator",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetTask"
+                        }
+                    }
+                }
             }
         }
     },
     "definitions": {
+        "dto.CreateTask": {
+            "type": "object",
+            "required": [
+                "text",
+                "title"
+            ],
+            "properties": {
+                "text": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.GetTask": {
             "type": "object",
             "properties": {

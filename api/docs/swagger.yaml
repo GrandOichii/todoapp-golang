@@ -1,5 +1,15 @@
 basePath: /api/v1
 definitions:
+  dto.CreateTask:
+    properties:
+      text:
+        type: string
+      title:
+        type: string
+    required:
+    - text
+    - title
+    type: object
   dto.GetTask:
     properties:
       completed:
@@ -70,8 +80,14 @@ paths:
       tags:
       - Auth
   /task:
-    post:
+    get:
       description: Fetches all of the user's tasks
+      parameters:
+      - description: Authenticator
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -80,6 +96,90 @@ paths:
               $ref: '#/definitions/dto.GetTask'
             type: array
       summary: Fetch all tasks
+      tags:
+      - Tasks
+    post:
+      description: Creates a new user task
+      parameters:
+      - description: Authenticator
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: new task data
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTask'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.GetTask'
+      summary: Creates a task
+      tags:
+      - Tasks
+  /task/{taskId}:
+    delete:
+      description: Deletes the task
+      parameters:
+      - description: Authenticator
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete task
+      tags:
+      - Tasks
+    get:
+      description: Finds a task by it's task id
+      parameters:
+      - description: Authenticator
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetTask'
+      summary: Find a task by id
+      tags:
+      - Tasks
+    patch:
+      description: Toggles the task's complete status
+      parameters:
+      - description: Authenticator
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Task ID
+        in: path
+        name: taskId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetTask'
+      summary: Toggle complete status
       tags:
       - Tasks
 swagger: "2.0"

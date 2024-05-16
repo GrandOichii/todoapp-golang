@@ -34,18 +34,26 @@ func CreateTaskController(taskService services.TaskService, auth gin.HandlerFunc
 	}
 }
 
-// Find all tasks	godoc
+// FindAllTasks		godoc
 // @Summary			Fetch all tasks
 // @Description		Fetches all of the user's tasks
+// @Param			Authorization header string true "Authenticator"
 // @Tags			Tasks
 // @Success			200 {object} []dto.GetTask
-// @Router			/task [post]
+// @Router			/task [get]
 func (con TaskController) all(c *gin.Context) {
 	result := con.taskService.GetAll()
 	c.IndentedJSON(http.StatusOK, result)
 }
 
-// TODO add swagger docs
+// CreateTask		godoc
+// @Summary			Creates a task
+// @Description		Creates a new user task
+// @Param			Authorization header string true "Authenticator"
+// @Param			task body dto.CreateTask true "new task data"
+// @Tags			Tasks
+// @Success			201 {object} dto.GetTask
+// @Router			/task [post]
 func (con TaskController) create(c *gin.Context) {
 	var newTask dto.CreateTask
 
@@ -63,7 +71,14 @@ func (con TaskController) create(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, result)
 }
 
-// TODO add swagger docs
+// FindById			godoc
+// @Summary			Find a task by id
+// @Description		Finds a task by it's task id
+// @Param			Authorization header string true "Authenticator"
+// @Param   		taskId path string true "Task ID"
+// @Tags			Tasks
+// @Success			200 {object} dto.GetTask
+// @Router			/task/{taskId} [get]
 func (con TaskController) byId(c *gin.Context) {
 	id := c.Param("id")
 
@@ -76,7 +91,14 @@ func (con TaskController) byId(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, result)
 }
 
-// TODO add swagger docs
+// ToggleComplete	godoc
+// @Summary			Toggle complete status
+// @Description		Toggles the task's complete status
+// @Param			Authorization header string true "Authenticator"
+// @Param   		taskId path string true "Task ID"
+// @Tags			Tasks
+// @Success			200 {object} dto.GetTask
+// @Router			/task/{taskId} [patch]
 func (con TaskController) toggleCompleted(c *gin.Context) {
 	id := c.Param("id")
 
@@ -87,10 +109,16 @@ func (con TaskController) toggleCompleted(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, result)
-
 }
 
-// TODO add swagger docs
+// Delete			godoc
+// @Summary			Delete task
+// @Description		Deletes the task
+// @Param			Authorization header string true "Authenticator"
+// @Param   		taskId path string true "Task ID"
+// @Tags			Tasks
+// @Success			200
+// @Router			/task/{taskId} [delete]
 func (con TaskController) delete(c *gin.Context) {
 	id := c.Param("id")
 

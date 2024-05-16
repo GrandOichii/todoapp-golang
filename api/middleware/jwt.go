@@ -70,8 +70,6 @@ func CreateJwtMiddleware(userService services.UserService) *JwtMiddleware {
 			// 	return true
 			// }
 
-			// TODO figure out what this is for
-
 			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
