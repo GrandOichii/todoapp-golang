@@ -1,0 +1,34 @@
+basePath: /api/v1
+definitions:
+  dto.GetTask:
+    properties:
+      completed:
+        type: boolean
+      id:
+        type: string
+      text:
+        type: string
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A siple TODO task service
+  title: TODOapp api
+  version: "1.0"
+paths:
+  /task:
+    get:
+      description: Fetches all of the user's tasks
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.GetTask'
+            type: array
+      summary: Fetch all tasks
+      tags:
+      - tags
+swagger: "2.0"

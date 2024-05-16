@@ -13,6 +13,7 @@ type DbConfiguration struct {
 	ConnectionUri  string                  `json:"connectionUri"`
 	DbName         string                  `json:"dbName"`
 	TaskCollection CollectionConfiguration `json:"taskCollection"`
+	UserCollection CollectionConfiguration `json:"userCollection"`
 }
 
 type Configuration struct {

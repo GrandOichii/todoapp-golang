@@ -32,11 +32,18 @@ func CreateTaskController(taskService services.TaskService) *TaskController {
 	}
 }
 
+// Find all tasks	godoc
+// @Summary			Fetch all tasks
+// @Description		Fetches all of the user's tasks
+// @Tags			tags
+// @Success			200 {object} []dto.GetTask
+// @Router			/task [get]
 func (con TaskController) all(c *gin.Context) {
 	result := con.taskService.GetAll()
 	c.IndentedJSON(http.StatusOK, result)
 }
 
+// TODO add swagger docs
 func (con TaskController) create(c *gin.Context) {
 	var newTask dto.CreateTask
 
@@ -54,6 +61,7 @@ func (con TaskController) create(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, result)
 }
 
+// TODO add swagger docs
 func (con TaskController) byId(c *gin.Context) {
 	id := c.Param("id")
 
@@ -66,6 +74,7 @@ func (con TaskController) byId(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, result)
 }
 
+// TODO add swagger docs
 func (con TaskController) toggleCompleted(c *gin.Context) {
 	id := c.Param("id")
 
@@ -79,6 +88,7 @@ func (con TaskController) toggleCompleted(c *gin.Context) {
 
 }
 
+// TODO add swagger docs
 func (con TaskController) delete(c *gin.Context) {
 	id := c.Param("id")
 

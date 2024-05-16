@@ -17,7 +17,7 @@ type UserRepositoryImpl struct {
 }
 
 func (repo UserRepositoryImpl) collection() *mongo.Collection {
-	return repo.dbClient.Database(repo.config.Db.DbName).Collection(repo.config.Db.TaskCollection.Name)
+	return repo.dbClient.Database(repo.config.Db.DbName).Collection(repo.config.Db.UserCollection.Name)
 }
 
 func (repo UserRepositoryImpl) FindByUsername(username string) *models.User {

@@ -5,6 +5,9 @@
         "dbName": "todoapp",
         "taskCollection": {
             "name": "tasks"
+        },
+        "userCollection": {
+            "name": "users"
         }
     }
 }

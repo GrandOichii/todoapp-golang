@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/GrandOichii/todoapp-golang/api/config"
 	"github.com/GrandOichii/todoapp-golang/api/controllers"
@@ -10,8 +9,12 @@ import (
 	services "github.com/GrandOichii/todoapp-golang/api/services/task"
 	gin "github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	docs "github.com/GrandOichii/todoapp-golang/api/docs"
+	swaggerfiles "github.com/swaggo/files"
 )
 
 func createRouter() *gin.Engine {
@@ -23,13 +26,17 @@ func createRouter() *gin.Engine {
 func dbConnect(config *config.Configuration) (*mongo.Client, error) {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(config.Db.ConnectionUri).SetServerAPIOptions(serverAPI))
-	fmt.Printf("config.Db.DbName: %v\n", config.Db.DbName)
 	if err != nil {
 		return nil, err
 	}
 	return client, nil
 }
 
+// @title TODOapp api
+// @version 1.0
+// @description A siple TODO task service
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
 	config, err := config.ReadConfig("config.json")
 
@@ -55,5 +62,7 @@ func main() {
 
 	taskController.Configure(router)
 
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.Run("localhost:" + config.Port)
 }
