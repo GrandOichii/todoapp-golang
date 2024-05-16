@@ -3,8 +3,8 @@ package dto
 import "github.com/GrandOichii/todoapp-golang/api/models"
 
 type CreateTask struct {
-	Title string `json:"title" validate:"required,gt=3,lt=30"`
-	Text  string `json:"text" validate:"required"`
+	Title string `json:"title" validate:"required,gt=3,lt=20"`
+	Text  string `json:"text" validate:"lt=30"`
 }
 
 func (t CreateTask) ToTask() *models.Task {
