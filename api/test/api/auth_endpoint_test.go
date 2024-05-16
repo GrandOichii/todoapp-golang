@@ -139,3 +139,60 @@ func Test_ShouldNotRegisterUsernameExists(t *testing.T) {
 
 	assert.Equal(t, 400, w2.Code)
 }
+
+func Test_ShouldLogin(t *testing.T) {
+	r := setupRouter()
+	w1 := httptest.NewRecorder()
+	w2 := httptest.NewRecorder()
+
+	userData := dto.PostUser{
+		Username: "user1",
+		Password: "password",
+	}
+	data, _ := json.Marshal(userData)
+	req1, _ := http.NewRequest("POST", "/api/v1/auth/register", strings.NewReader(string(data)))
+	r.ServeHTTP(w1, req1)
+	req2, _ := http.NewRequest("POST", "/api/v1/auth/login", strings.NewReader(string(data)))
+	r.ServeHTTP(w2, req2)
+
+	assert.Equal(t, 200, w2.Code)
+}
+
+func Test_ShouldNotLoginWrongUsername(t *testing.T) {
+	r := setupRouter()
+	w := httptest.NewRecorder()
+
+	userData := dto.PostUser{
+		Username: "user1",
+		Password: "password",
+	}
+	data, _ := json.Marshal(userData)
+	req, _ := http.NewRequest("POST", "/api/v1/auth/login", strings.NewReader(string(data)))
+
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, 401, w.Code)
+}
+
+func Test_ShouldNotLoginWrongPassword(t *testing.T) {
+	r := setupRouter()
+	w1 := httptest.NewRecorder()
+	w2 := httptest.NewRecorder()
+
+	userData1 := dto.PostUser{
+		Username: "user1",
+		Password: "password",
+	}
+	data1, _ := json.Marshal(userData1)
+	req1, _ := http.NewRequest("POST", "/api/v1/auth/register", strings.NewReader(string(data1)))
+	r.ServeHTTP(w1, req1)
+	userData2 := dto.PostUser{
+		Username: "user1",
+		Password: "password1",
+	}
+	data2, _ := json.Marshal(userData2)
+	req2, _ := http.NewRequest("POST", "/api/v1/auth/login", strings.NewReader(string(data2)))
+	r.ServeHTTP(w2, req2)
+
+	assert.Equal(t, 401, w2.Code)
+}
