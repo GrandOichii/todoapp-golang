@@ -24,6 +24,21 @@ func (m *MockTaskRepository) Save(task *models.Task) bool {
 	return m.Called(task).Bool(0)
 }
 
+func (m *MockTaskRepository) UpdateById(id string, updateF func(*models.Task) *models.Task) *models.Task {
+	args := m.Called(id, updateF)
+	switch task := args.Get(0).(type) {
+	case *models.Task:
+		return task
+	case nil:
+		return nil
+	}
+	return nil
+}
+
+func (m *MockTaskRepository) Remove(id string) bool {
+	return m.Called(id).Bool(0)
+}
+
 func (m *MockTaskRepository) FindById(id string) *models.Task {
 	args := m.Called(id)
 	switch task := args.Get(0).(type) {
