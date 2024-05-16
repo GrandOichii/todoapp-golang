@@ -15,32 +15,32 @@ func filter[T any](ss []T, test func(T) bool) (ret []T) {
 	return
 }
 
-type MockTaskRepository struct {
+type FakeTaskRepository struct {
 	tasks []*models.Task
 }
 
-func CreateMockTaskRepository() *MockTaskRepository {
-	return &MockTaskRepository{}
+func CreateMockTaskRepository() *FakeTaskRepository {
+	return &FakeTaskRepository{}
 }
 
-func (repo MockTaskRepository) FindAll() []*models.Task {
+func (repo FakeTaskRepository) FindAll() []*models.Task {
 	return repo.tasks
 }
 
-func (repo MockTaskRepository) FindByOwnerId(ownerId string) []*models.Task {
+func (repo FakeTaskRepository) FindByOwnerId(ownerId string) []*models.Task {
 	return filter(repo.tasks, func(task *models.Task) bool {
 		return task.OwnerId == ownerId
 	})
 }
 
-func (repo *MockTaskRepository) Save(task *models.Task) error {
+func (repo *FakeTaskRepository) Save(task *models.Task) error {
 	task.Id = strconv.Itoa(len(repo.tasks))
 	repo.tasks = append(repo.tasks, task)
 
 	return nil
 }
 
-func (repo MockTaskRepository) FindById(id string) *models.Task {
+func (repo FakeTaskRepository) FindById(id string) *models.Task {
 	for _, task := range repo.tasks {
 		if task.Id == id {
 			return task

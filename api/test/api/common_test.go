@@ -24,6 +24,7 @@ func checkErr(t *testing.T, err error) {
 }
 
 func setupRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
 	container, err := mongodb.RunContainer(context.Background(), testcontainers.WithImage("mongo"))
 	if err != nil {
 		panic(err)

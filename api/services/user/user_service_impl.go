@@ -39,7 +39,10 @@ func (ser UserServiceImpl) Register(user *dto.PostUser) error {
 		return err
 	}
 
-	ser.repo.Save(newUser)
+	saved := ser.repo.Save(newUser)
+	if saved == nil {
+		panic(fmt.Errorf("failed to save user model"))
+	}
 
 	return nil
 }
