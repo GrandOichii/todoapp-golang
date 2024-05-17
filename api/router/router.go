@@ -7,6 +7,7 @@ import (
 	"github.com/GrandOichii/todoapp-golang/api/config"
 	"github.com/GrandOichii/todoapp-golang/api/controllers"
 	"github.com/GrandOichii/todoapp-golang/api/middleware"
+	"github.com/GrandOichii/todoapp-golang/api/utility"
 	"github.com/gin-contrib/cors"
 
 	"context"
@@ -73,6 +74,7 @@ func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, 
 			validate,
 		),
 		auth.Middle.MiddlewareFunc(),
+		utility.Extract,
 	)
 	taskController.Configure(router)
 

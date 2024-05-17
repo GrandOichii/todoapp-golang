@@ -12,10 +12,10 @@ type AuthController struct {
 	Controller
 
 	userService  services.UserService
-	loginHandler func(c *gin.Context)
+	loginHandler gin.HandlerFunc
 }
 
-func CreateAuthController(userService services.UserService, loginHandler func(c *gin.Context)) *AuthController {
+func CreateAuthController(userService services.UserService, loginHandler gin.HandlerFunc) *AuthController {
 	return &AuthController{
 		userService:  userService,
 		loginHandler: loginHandler,

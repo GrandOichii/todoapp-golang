@@ -57,6 +57,20 @@ func Test_ShouldNotRegister(t *testing.T) {
 	assert.Equal(t, w.Code, 400)
 }
 
+func Test_ShouldNotRegisterBadData(t *testing.T) {
+	// arrange
+	service := createMockUserService()
+	controller := createAuthController(service)
+	data := []string{"first", "second"}
+	c, w := createTestContext(data)
+
+	// act
+	controller.Register(c)
+
+	// assert
+	assert.Equal(t, w.Code, 400)
+}
+
 func Test_ShouldLogin(t *testing.T) {
 	// arrange
 	service := createMockUserService()

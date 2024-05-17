@@ -24,5 +24,5 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	router.Run("localhost:" + config.Port)
+	router.Run(":" + config.Port)
 }
