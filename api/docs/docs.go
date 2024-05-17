@@ -17,14 +17,14 @@ const docTemplate = `{
     "paths": {
         "/auth/login": {
             "post": {
-                "description": "Checks the user data and returns a jwt token on correct login",
+                "description": "Checks the user data and returns a jwt token on correct Login",
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Logs in the user",
                 "parameters": [
                     {
-                        "description": "login details",
+                        "description": "Login details",
                         "name": "details",
                         "in": "body",
                         "required": true,
@@ -52,7 +52,7 @@ const docTemplate = `{
                 "summary": "Registers the user",
                 "parameters": [
                     {
-                        "description": "register details",
+                        "description": "Register details",
                         "name": "details",
                         "in": "body",
                         "required": true,
@@ -70,11 +70,11 @@ const docTemplate = `{
         },
         "/task": {
             "get": {
-                "description": "Fetches all of the user's tasks",
+                "description": "Fetches All of the user's tasks",
                 "tags": [
                     "Tasks"
                 ],
-                "summary": "Fetch all tasks",
+                "summary": "Fetch All tasks",
                 "parameters": [
                     {
                         "type": "string",
@@ -227,7 +227,6 @@ const docTemplate = `{
         "dto.CreateTask": {
             "type": "object",
             "required": [
-                "text",
                 "title"
             ],
             "properties": {

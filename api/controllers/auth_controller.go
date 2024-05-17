@@ -36,7 +36,7 @@ func (con AuthController) Configure(r *gin.Engine) {
 // @Param				details body dto.PostUser true "Register details"
 // @Tags				Auth
 // @Success				200
-// @Router				/auth/Register [post]
+// @Router				/auth/register [post]
 func (con AuthController) Register(c *gin.Context) {
 	var newUser dto.PostUser
 
@@ -60,7 +60,7 @@ func (con AuthController) Register(c *gin.Context) {
 // @Param				details body dto.PostUser true "Login details"
 // @Tags				Auth
 // @Success				200 {object} services.LoginResult
-// @Router				/auth/Login [post]
+// @Router				/auth/login [post]
 func (con AuthController) Login(c *gin.Context) {
 	con.loginHandler(c)
 }
