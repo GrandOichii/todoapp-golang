@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/GrandOichii/todoapp-golang/api/config"
 	"github.com/GrandOichii/todoapp-golang/api/controllers"
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/user"
 	"github.com/GrandOichii/todoapp-golang/api/middleware"
@@ -15,7 +16,9 @@ import (
 func createAuthController(service services.UserService) *controllers.AuthController {
 	return controllers.CreateAuthController(
 		service,
-		middleware.CreateJwtMiddleware(service).Middle.LoginHandler,
+		middleware.CreateJwtMiddleware(&config.Configuration{
+			AuthSecretKey: "test secret key",
+		}, service).Middle.LoginHandler,
 	)
 }
 

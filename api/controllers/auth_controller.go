@@ -23,7 +23,6 @@ func CreateAuthController(userService services.UserService, loginHandler gin.Han
 }
 
 func (con AuthController) Configure(r *gin.Engine) {
-	// TODO
 	g := r.Group("/api/v1/auth")
 	{
 		g.POST("/register", con.Register)

@@ -46,7 +46,7 @@ func CreateRouter(config *config.Configuration) *gin.Engine {
 	userRepo := userrepositories.CreateUserRepositoryImpl(dbClient, config)
 	taskRepo := taskrepositories.CreateTaskRepositoryImpl(dbClient, config)
 
-	configRouter(result, userRepo, taskRepo)
+	configRouter(result, config, userRepo, taskRepo)
 
 	result.GET("/api/v1/hello", func(c *gin.Context) {
 		c.String(http.StatusOK, "hi!")
@@ -55,7 +55,7 @@ func CreateRouter(config *config.Configuration) *gin.Engine {
 	return result
 }
 
-func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, taskRepo taskrepositories.TaskRepository) {
+func configRouter(router *gin.Engine, config *config.Configuration, userRepo userrepositories.UserRepository, taskRepo taskrepositories.TaskRepository) {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
 	// services
@@ -65,7 +65,7 @@ func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, 
 	)
 
 	// middleware
-	auth := middleware.CreateJwtMiddleware(userService)
+	auth := middleware.CreateJwtMiddleware(config, userService)
 
 	// controllers
 	taskController := controllers.CreateTaskController(

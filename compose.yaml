@@ -12,6 +12,7 @@ services:
       - mongo
     environment:
     - PORT=8080
+    - AUTH_SECRET_KEY="prod secret key placeholder"
     - DB_CONNECTION_URI=mongodb://mongo:27017
     - DB_NAME=todoapp
     - DB_TASK_COLLECTION_NAME=tasks

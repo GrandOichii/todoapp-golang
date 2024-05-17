@@ -20,8 +20,9 @@ type DbConfiguration struct {
 }
 
 type Configuration struct {
-	Port string          `json:"port" env:"PORT,required"`
-	Db   DbConfiguration `json:"db" env:",required,prefix=DB_"`
+	AuthSecretKey string          `json:"authSecretKey" env:"AUTH_SECRET_KEY,required"`
+	Port          string          `json:"port" env:"PORT,required"`
+	Db            DbConfiguration `json:"db" env:",required,prefix=DB_"`
 }
 
 func ReadConfig(path string) (*Configuration, error) {

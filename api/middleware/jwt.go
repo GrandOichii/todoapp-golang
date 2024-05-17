@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/GrandOichii/todoapp-golang/api/config"
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/user"
 	"github.com/GrandOichii/todoapp-golang/api/models"
 	services "github.com/GrandOichii/todoapp-golang/api/services/user"
@@ -22,16 +23,10 @@ type JwtMiddleware struct {
 	Middle *jwt.GinJWTMiddleware
 }
 
-func GetSecretKey() []byte {
-	// TODO add actual secret key
-	return []byte("secret key")
-}
-
-func CreateJwtMiddleware(userService services.UserService) *JwtMiddleware {
-
+func CreateJwtMiddleware(config *config.Configuration, userService services.UserService) *JwtMiddleware {
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:      "test zone",
-		Key:        GetSecretKey(),
+		Key:        []byte(config.AuthSecretKey),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
 
