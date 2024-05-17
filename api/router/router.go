@@ -87,7 +87,7 @@ func configRouter(router *gin.Engine, config *config.Configuration, userRepo use
 
 func dbConnect(config *config.Configuration) (*mongo.Client, error) {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(config.Db.ConnectionUri).SetServerAPIOptions(serverAPI))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(config.Db.ConnectionUri).SetServerAPIOptions(serverAPI))
 	if err != nil {
 		return nil, err
 	}

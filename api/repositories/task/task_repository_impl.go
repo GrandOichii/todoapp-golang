@@ -30,14 +30,14 @@ func (repo TaskRepositoryImpl) collection() *mongo.Collection {
 
 func (repo TaskRepositoryImpl) FindByOwnerId(ownerId string) []*models.Task {
 	var collection = repo.collection()
-	cursor, err := collection.Find(context.TODO(), bson.D{
+	cursor, err := collection.Find(context.Background(), bson.D{
 		{Key: "ownerid", Value: ownerId},
 	})
 	if err != nil {
 		panic(err)
 	}
 	var result []*models.Task
-	err = cursor.All(context.TODO(), &result)
+	err = cursor.All(context.Background(), &result)
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +46,7 @@ func (repo TaskRepositoryImpl) FindByOwnerId(ownerId string) []*models.Task {
 
 func (repo *TaskRepositoryImpl) Save(task *models.Task) bool {
 	collection := repo.collection()
-	insert, err := collection.InsertOne(context.TODO(), task)
+	insert, err := collection.InsertOne(context.Background(), task)
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +62,7 @@ func (repo TaskRepositoryImpl) FindById(id string) *models.Task {
 
 	collection := repo.collection()
 
-	find := collection.FindOne(context.TODO(), bson.D{
+	find := collection.FindOne(context.Background(), bson.D{
 		{Key: "_id", Value: taskId},
 	})
 
@@ -98,7 +98,7 @@ func (repo TaskRepositoryImpl) UpdateById(id string, updateF func(*models.Task) 
 	newTask := updateF(task)
 	newTask.Id = ""
 
-	replace := collection.FindOneAndReplace(context.TODO(), bson.D{
+	replace := collection.FindOneAndReplace(context.Background(), bson.D{
 		{Key: "_id", Value: taskId},
 	}, newTask)
 
@@ -121,7 +121,7 @@ func (repo *TaskRepositoryImpl) Remove(id string) bool {
 
 	collection := repo.collection()
 
-	delete := collection.FindOneAndDelete(context.TODO(), bson.D{
+	delete := collection.FindOneAndDelete(context.Background(), bson.D{
 		{Key: "_id", Value: taskId},
 	})
 

@@ -36,7 +36,8 @@ func setupRouter() *gin.Engine {
 
 	// !FIXME can't read from file for some reason
 	config := config.Configuration{
-		Port: "8080",
+		AuthSecretKey: "test secret key",
+		Port:          "8080",
 		Db: config.DbConfiguration{
 			ConnectionUri:  conn,
 			DbName:         "test_todoapp",
