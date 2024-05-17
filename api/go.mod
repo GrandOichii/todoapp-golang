@@ -1,6 +1,8 @@
 module github.com/GrandOichii/todoapp-golang/api
 
-go 1.21
+go 1.22
+
+toolchain go1.22.3
 
 require (
 	github.com/gin-contrib/cors v1.7.2
@@ -50,6 +52,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
+	github.com/sethvargo/go-envconfig v1.0.2 // indirect
 	github.com/shirou/gopsutil/v3 v3.23.12 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect

@@ -14,15 +14,20 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	config, err := config.ReadConfig("config.json")
+	var c *config.Configuration
+
+	c, err := config.ReadConfig("config.json")
 
 	if err != nil {
-		panic(err)
+		c, err = config.ReadEnvConfig()
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	router := router.CreateRouter(config)
+	router := router.CreateRouter(c)
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	router.Run(":" + config.Port)
+	router.Run(":" + c.Port)
 }

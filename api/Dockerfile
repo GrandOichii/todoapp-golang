@@ -7,8 +7,9 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 COPY . .
+RUN rm config.json
 RUN go build -o /todoapp
 
-EXPOSE 8080
+# EXPOSE 8080
 
 CMD ["/todoapp"]
