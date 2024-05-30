@@ -32,6 +32,13 @@ func CreateJwtMiddleware(config *config.Configuration, userService services.User
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
 
+		SendCookie:     true,
+		SecureCookie:   false, // ! non HTTPS dev environments
+		CookieHTTPOnly: true,  // JS can't modify
+		CookieDomain:   "localhost:" + config.Port,
+		CookieName:     "token",                  // default jwt
+		CookieSameSite: http.SameSiteDefaultMode, //SameSiteDefaultMode, SameSiteLaxMode, SameSiteStrictMode, SameSiteNoneMode
+
 		IdentityKey: IDKey,
 
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
@@ -96,7 +103,7 @@ func CreateJwtMiddleware(config *config.Configuration, userService services.User
 		// - "query:<name>"
 		// - "cookie:<name>"
 		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenLookup: "header: Authorization, query: token, cookie: token",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",
 

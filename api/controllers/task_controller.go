@@ -38,7 +38,7 @@ func (con TaskController) ConfigureViews(r *gin.Engine) {
 	}
 }
 
-func CreateTaskController(taskService services.TaskService, auth gin.HandlerFunc) *TaskController {
+func CreateTaskController(taskService services.TaskService, auth gin.HandlerFunc, claimExtractF func(string, *gin.Context) (string, error)) *TaskController {
 	return &TaskController{
 		taskService:   taskService,
 		auth:          auth,

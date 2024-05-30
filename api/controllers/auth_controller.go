@@ -25,8 +25,8 @@ func CreateAuthController(userService services.UserService, loginHandler gin.Han
 func (con AuthController) ConfigureApi(r *gin.Engine) {
 	g := r.Group("/api/v1/auth")
 	{
-		g.POST("/register", con.register)
-		g.POST("/login", con.login)
+		g.POST("/register", con.Register)
+		g.POST("/login", con.Login)
 	}
 }
 
@@ -74,11 +74,15 @@ func (con AuthController) Login(c *gin.Context) {
 
 func (con AuthController) TryLogin(c *gin.Context) {
 	con.loginHandler(c)
-	// status := c.Writer.Status()
-	// if status == http.StatusUnauthorized {
-
-	// }
+	status := c.Writer.Status()
+	if status == http.StatusUnauthorized {
+		c.HTML(c.Writer.Status(), "warning", gin.H{
+			"text": "login failed",
+		})
+		return
+	}
+	c.Redirect(http.StatusSeeOther, "/")
+	//
 	// fmt.Printf("c.Writer.Status(): %v\n")
-	c.HTML(c.Writer.Status(), "test", nil)
 	// c.JSON(, "amogus")
 }

@@ -11,7 +11,7 @@ import (
 // @title TODOapp api
 // @version 1.0
 // @description A siple TODO task service
-// @host localhost:9090
+// @host localhost:8080
 // @BasePath /api/v1
 func main() {
 	var c *config.Configuration

@@ -1,22 +1,22 @@
 version: '3.1'
 
 services:
-  api:
-    container_name: todoapp
-    build: ./api
-    ports:
-      - 9090:8080
-    links:
-      - mongo
-    depends_on:
-      - mongo
-    environment:
-      PORT: 8080
-      AUTH_SECRET_KEY: /run/secrets/auth_key
-      DB_CONNECTION_URI: mongodb://mongo:27017
-      DB_NAME: todoapp
-      DB_TASK_COLLECTION_NAME: tasks
-      DB_USER_COLLECTION_NAME: users
+  # api:
+  #   container_name: todoapp
+  #   build: ./api
+  #   ports:
+  #     - 9090:8080
+  #   links:
+  #     - mongo
+  #   depends_on:
+  #     - mongo
+  #   environment:
+  #     PORT: 8080
+  #     AUTH_SECRET_KEY: /run/secrets/auth_key
+  #     DB_CONNECTION_URI: mongodb://mongo:27017
+  #     DB_NAME: todoapp
+  #     DB_TASK_COLLECTION_NAME: tasks
+  #     DB_USER_COLLECTION_NAME: users
   mongo:
     container_name: todoapp-db
     image: mongo
