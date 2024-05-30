@@ -9,5 +9,6 @@
         "userCollection": {
             "name": "users"
         }
-    }
+    },
+    "authSecretKey": "secret key placeholder"
 }

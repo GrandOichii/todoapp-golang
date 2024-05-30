@@ -31,7 +31,7 @@ func (repo UserRepositoryImpl) collection() *mongo.Collection {
 func (repo UserRepositoryImpl) FindByUsername(username string) *models.User {
 	collection := repo.collection()
 
-	find := collection.FindOne(context.TODO(), bson.D{
+	find := collection.FindOne(context.Background(), bson.D{
 		{Key: "username", Value: username},
 	})
 
@@ -55,7 +55,7 @@ func (repo UserRepositoryImpl) FindByUsername(username string) *models.User {
 func (repo UserRepositoryImpl) Save(user *models.User) *models.User {
 	collection := repo.collection()
 
-	save, err := collection.InsertOne(context.TODO(), user)
+	save, err := collection.InsertOne(context.Background(), user)
 	if err != nil {
 		panic(err)
 	}

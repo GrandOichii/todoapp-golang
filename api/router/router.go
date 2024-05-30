@@ -7,6 +7,7 @@ import (
 	"github.com/GrandOichii/todoapp-golang/api/config"
 	"github.com/GrandOichii/todoapp-golang/api/controllers"
 	"github.com/GrandOichii/todoapp-golang/api/middleware"
+	"github.com/GrandOichii/todoapp-golang/api/utility"
 	"github.com/gin-contrib/cors"
 
 	"context"
@@ -44,12 +45,12 @@ func CreateRouter(config *config.Configuration) *gin.Engine {
 	userRepo := userrepositories.CreateUserRepositoryImpl(dbClient, config)
 	taskRepo := taskrepositories.CreateTaskRepositoryImpl(dbClient, config)
 
-	configRouter(result, userRepo, taskRepo)
+	configRouter(result, config, userRepo, taskRepo)
 
 	return result
 }
 
-func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, taskRepo taskrepositories.TaskRepository) {
+func configRouter(router *gin.Engine, config *config.Configuration, userRepo userrepositories.UserRepository, taskRepo taskrepositories.TaskRepository) {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
 	// services
@@ -59,7 +60,7 @@ func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, 
 	)
 
 	// middleware
-	auth := middleware.CreateJwtMiddleware(userService)
+	auth := middleware.CreateJwtMiddleware(config, userService)
 
 	// controllers
 	taskController := controllers.CreateTaskController(
@@ -68,6 +69,7 @@ func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, 
 			validate,
 		),
 		auth.Middle.MiddlewareFunc(),
+		utility.Extract,
 	)
 	taskController.ConfigureApi(router)
 
@@ -88,7 +90,7 @@ func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, 
 
 func dbConnect(config *config.Configuration) (*mongo.Client, error) {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(config.Db.ConnectionUri).SetServerAPIOptions(serverAPI))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(config.Db.ConnectionUri).SetServerAPIOptions(serverAPI))
 	if err != nil {
 		return nil, err
 	}

@@ -12,10 +12,10 @@ type AuthController struct {
 	Controller
 
 	userService  services.UserService
-	loginHandler func(c *gin.Context)
+	loginHandler gin.HandlerFunc
 }
 
-func CreateAuthController(userService services.UserService, loginHandler func(c *gin.Context)) *AuthController {
+func CreateAuthController(userService services.UserService, loginHandler gin.HandlerFunc) *AuthController {
 	return &AuthController{
 		userService:  userService,
 		loginHandler: loginHandler,
@@ -40,11 +40,11 @@ func (con AuthController) ConfigureViews(r *gin.Engine) {
 // UserRegister			godoc
 // @Summary				Registers the user
 // @Description			Checks the user data and adds it to the repo
-// @Param				details body dto.PostUser true "register details"
+// @Param				details body dto.PostUser true "Register details"
 // @Tags				Auth
 // @Success				200
 // @Router				/auth/register [post]
-func (con AuthController) register(c *gin.Context) {
+func (con AuthController) Register(c *gin.Context) {
 	var newUser dto.PostUser
 
 	if err := c.BindJSON(&newUser); err != nil {
@@ -63,12 +63,12 @@ func (con AuthController) register(c *gin.Context) {
 
 // UserLogin			godoc
 // @Summary				Logs in the user
-// @Description			Checks the user data and returns a jwt token on correct login
-// @Param				details body dto.PostUser true "login details"
+// @Description			Checks the user data and returns a jwt token on correct Login
+// @Param				details body dto.PostUser true "Login details"
 // @Tags				Auth
 // @Success				200 {object} services.LoginResult
 // @Router				/auth/login [post]
-func (con AuthController) login(c *gin.Context) {
+func (con AuthController) Login(c *gin.Context) {
 	con.loginHandler(c)
 }
 

@@ -37,7 +37,7 @@ definitions:
       token:
         type: string
     type: object
-host: localhost:8080
+host: localhost:9090
 info:
   contact: {}
   description: A siple TODO task service
@@ -46,9 +46,9 @@ info:
 paths:
   /auth/login:
     post:
-      description: Checks the user data and returns a jwt token on correct login
+      description: Checks the user data and returns a jwt token on correct Login
       parameters:
-      - description: login details
+      - description: Login details
         in: body
         name: details
         required: true
@@ -66,7 +66,7 @@ paths:
     post:
       description: Checks the user data and adds it to the repo
       parameters:
-      - description: register details
+      - description: Register details
         in: body
         name: details
         required: true
@@ -80,7 +80,7 @@ paths:
       - Auth
   /task:
     get:
-      description: Fetches all of the user's tasks
+      description: Fetches All of the user's tasks
       parameters:
       - description: Authenticator
         in: header
@@ -94,7 +94,7 @@ paths:
             items:
               $ref: '#/definitions/dto.GetTask'
             type: array
-      summary: Fetch all tasks
+      summary: Fetch All tasks
       tags:
       - Tasks
     post:

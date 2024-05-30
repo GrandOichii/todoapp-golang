@@ -106,5 +106,108 @@ func Test_ShouldNotGetByStolenId(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-// TODO add ToggleCompleted tests
-// TODO add Delete tests
+func Test_ShouldToggleCompleted(t *testing.T) {
+	// arrange
+	repo := createTaskRepository()
+	service := createTaskService(repo)
+	taskId := "taskid"
+	userId := "userid"
+	repo.On("UpdateById", mock.Anything, mock.Anything).Return(&models.Task{
+		OwnerId: userId,
+		Id:      taskId,
+	})
+
+	// act
+	task, err := service.ToggleCompleted(userId, taskId)
+
+	// assert
+	assert.NotNil(t, task)
+	assert.Nil(t, err)
+}
+
+func Test_ShouldNotToggleCompleted(t *testing.T) {
+	// arrange
+	repo := createTaskRepository()
+	service := createTaskService(repo)
+	taskId := "taskid"
+	userId := "userid"
+	repo.On("UpdateById", mock.Anything, mock.Anything).Return(nil)
+
+	// act
+	task, err := service.ToggleCompleted(userId, taskId)
+
+	// assert
+	assert.Nil(t, task)
+	assert.NotNil(t, err)
+}
+
+func Test_ShouldNotToggleStolenCompleted(t *testing.T) {
+	// arrange
+	repo := createTaskRepository()
+	service := createTaskService(repo)
+	taskId := "taskid"
+	userId := "userid"
+	repo.On("UpdateById", mock.Anything, mock.Anything).Return(&models.Task{
+		OwnerId: "otherOwnerId",
+		Id:      taskId,
+	})
+
+	// act
+	task, err := service.ToggleCompleted(userId, taskId)
+
+	// assert
+	assert.Nil(t, task)
+	assert.NotNil(t, err)
+}
+
+func Test_ShouldDelete(t *testing.T) {
+	// arrange
+	repo := createTaskRepository()
+	service := createTaskService(repo)
+	taskId := "taskid"
+	userId := "userid"
+	repo.On("Remove", mock.Anything).Return(true)
+	repo.On("FindById", mock.Anything).Return(&models.Task{
+		OwnerId: userId,
+		Id:      taskId,
+	})
+
+	// act
+	err := service.Delete(userId, taskId)
+
+	// assert
+	assert.Nil(t, err)
+}
+
+func Test_ShouldNotDelete(t *testing.T) {
+	// arrange
+	repo := createTaskRepository()
+	service := createTaskService(repo)
+	taskId := "taskid"
+	userId := "userid"
+	repo.On("FindById", mock.Anything).Return(nil)
+
+	// act
+	err := service.Delete(userId, taskId)
+
+	// assert
+	assert.NotNil(t, err)
+}
+
+func Test_ShouldNotDeleteStolen(t *testing.T) {
+	// arrange
+	repo := createTaskRepository()
+	service := createTaskService(repo)
+	taskId := "taskid"
+	userId := "userid"
+	repo.On("FindById", mock.Anything).Return(&models.Task{
+		OwnerId: "otherOwnerId",
+		Id:      taskId,
+	})
+
+	// act
+	err := service.Delete(userId, taskId)
+
+	// assert
+	assert.NotNil(t, err)
+}
