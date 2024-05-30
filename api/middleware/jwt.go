@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"log"
+	"net/http"
+	"strings"
 	"time"
 
 	dto "github.com/GrandOichii/todoapp-golang/api/dto/user"
@@ -61,7 +63,6 @@ func CreateJwtMiddleware(userService services.UserService) *JwtMiddleware {
 			if err != nil {
 				return nil, jwt.ErrFailedAuthentication
 			}
-
 			return result, nil
 
 		},
@@ -73,10 +74,24 @@ func CreateJwtMiddleware(userService services.UserService) *JwtMiddleware {
 			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, gin.H{
-				"code":    code,
-				"message": message,
-			})
+			if strings.HasPrefix(c.FullPath(), "/api") {
+				c.JSON(code, gin.H{
+					"code":    code,
+					"message": message,
+				})
+				return
+			}
+			c.HTML(200, "login", nil)
+		},
+		LoginResponse: func(c *gin.Context, code int, token string, expire time.Time) {
+			if strings.HasPrefix(c.FullPath(), "/api") {
+				c.JSON(http.StatusOK, gin.H{
+					"code":   code,
+					"token":  token,
+					"expire": expire.Format(time.RFC3339),
+				})
+				return
+			}
 		},
 		// TokenLookup is a string in the form of "<source>:<name>" that is used
 		// to extract token from the request.

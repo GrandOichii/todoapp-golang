@@ -22,12 +22,18 @@ func CreateAuthController(userService services.UserService, loginHandler func(c 
 	}
 }
 
-func (con AuthController) Configure(r *gin.Engine) {
-	// TODO
+func (con AuthController) ConfigureApi(r *gin.Engine) {
 	g := r.Group("/api/v1/auth")
 	{
 		g.POST("/register", con.register)
 		g.POST("/login", con.login)
+	}
+}
+
+func (con AuthController) ConfigureViews(r *gin.Engine) {
+	g := r.Group("view")
+	{
+		g.POST("/login", con.TryLogin)
 	}
 }
 
@@ -42,7 +48,7 @@ func (con AuthController) register(c *gin.Context) {
 	var newUser dto.PostUser
 
 	if err := c.BindJSON(&newUser); err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -64,4 +70,15 @@ func (con AuthController) register(c *gin.Context) {
 // @Router				/auth/login [post]
 func (con AuthController) login(c *gin.Context) {
 	con.loginHandler(c)
+}
+
+func (con AuthController) TryLogin(c *gin.Context) {
+	con.loginHandler(c)
+	// status := c.Writer.Status()
+	// if status == http.StatusUnauthorized {
+
+	// }
+	// fmt.Printf("c.Writer.Status(): %v\n")
+	c.HTML(c.Writer.Status(), "test", nil)
+	// c.JSON(, "amogus")
 }

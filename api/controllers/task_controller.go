@@ -17,7 +17,7 @@ type TaskController struct {
 	auth        gin.HandlerFunc
 }
 
-func (con TaskController) Configure(r *gin.Engine) {
+func (con TaskController) ConfigureApi(r *gin.Engine) {
 	g := r.Group("/api/v1/task")
 	{
 		g.Use(con.auth)
@@ -26,6 +26,14 @@ func (con TaskController) Configure(r *gin.Engine) {
 		g.DELETE(":id", con.delete)
 		g.GET(":id", con.byId)
 		g.PATCH(":id", con.toggleCompleted)
+	}
+}
+
+func (con TaskController) ConfigureViews(r *gin.Engine) {
+	g := r.Group("view")
+	{
+		g.Use(con.auth)
+		g.GET("/tasks", con.GetTasks)
 	}
 }
 
@@ -161,4 +169,27 @@ func (con TaskController) delete(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+func (con *TaskController) GetTasks(c *gin.Context) {
+	// c.JSON(http.StatusOK, "amogus")
+	// return
+	// con.auth(c)
+	// status := c.Writer.Status()
+	// if status != 401 {
+	// 	c.HTML(status, "login", nil)
+	// 	return
+	// }
+
+	// c.HTML(sta)
+	userId, err := utility.Extract(middleware.IDKey, c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
+	tasks := con.taskService.GetAll(userId)
+	c.HTML(http.StatusOK, "tasks", gin.H{
+		"tasks": tasks,
+	})
 }

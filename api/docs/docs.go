@@ -227,7 +227,6 @@ const docTemplate = `{
         "dto.CreateTask": {
             "type": "object",
             "required": [
-                "text",
                 "title"
             ],
             "properties": {

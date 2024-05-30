@@ -1,0 +1,6 @@
+<h4>Tasks</h4>
+<div class="container">
+    {{ range $task := .tasks }}
+        {{ template "task" $task }}
+    {{ end }}
+</div>

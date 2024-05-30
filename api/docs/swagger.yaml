@@ -7,7 +7,6 @@ definitions:
       title:
         type: string
     required:
-    - text
     - title
     type: object
   dto.GetTask:

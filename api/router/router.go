@@ -31,7 +31,6 @@ func CreateRouter(config *config.Configuration) *gin.Engine {
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return true
-			// return origin == "http://localhost:3000"
 		},
 		MaxAge: 12 * time.Hour,
 	}))
@@ -46,10 +45,6 @@ func CreateRouter(config *config.Configuration) *gin.Engine {
 	taskRepo := taskrepositories.CreateTaskRepositoryImpl(dbClient, config)
 
 	configRouter(result, userRepo, taskRepo)
-
-	result.GET("/api/v1/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "hi!")
-	})
 
 	return result
 }
@@ -74,13 +69,21 @@ func configRouter(router *gin.Engine, userRepo userrepositories.UserRepository, 
 		),
 		auth.Middle.MiddlewareFunc(),
 	)
-	taskController.Configure(router)
+	taskController.ConfigureApi(router)
 
 	authController := controllers.CreateAuthController(
 		userService,
 		auth.Middle.LoginHandler,
 	)
-	authController.Configure(router)
+	authController.ConfigureApi(router)
+
+	// html
+	router.LoadHTMLGlob("templates/*")
+
+	router.GET("/", Index)
+
+	authController.ConfigureViews(router)
+	taskController.ConfigureViews(router)
 }
 
 func dbConnect(config *config.Configuration) (*mongo.Client, error) {
@@ -90,4 +93,8 @@ func dbConnect(config *config.Configuration) (*mongo.Client, error) {
 		return nil, err
 	}
 	return client, nil
+}
+
+func Index(c *gin.Context) {
+	c.HTML(http.StatusOK, "index", nil)
 }
